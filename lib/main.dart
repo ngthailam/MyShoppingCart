@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:my_shopping_list/core/navigation/app_routes.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:my_shopping_cart/core/navigation/app_routes.dart';
+import 'package:my_shopping_cart/data/cart/entity/cart.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initHive();
+
   runApp(const MyApp());
+}
+
+initHive() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(CartAdapter());
 }
 
 class MyApp extends StatelessWidget {
@@ -14,14 +23,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'My Shopping List',
+      title: 'My Shopping Cart',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        useMaterial3: true,
       ),
       getPages: AppRoutes.generatePages(),
       scrollBehavior: NoGlowScrollBehaviour(),
-      initialRoute: AppRoutes.onboard,
+      initialRoute: AppRoutes.home,
       navigatorKey: Get.key,
     );
   }

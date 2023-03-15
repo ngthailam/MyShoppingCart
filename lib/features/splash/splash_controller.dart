@@ -1,8 +1,8 @@
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
-import 'package:my_shopping_list/core/navigation/app_routes.dart';
-import 'package:my_shopping_list/data/settings/uset_settings_repo.dart';
+import 'package:my_shopping_cart/core/navigation/app_routes.dart';
+import 'package:my_shopping_cart/data/settings/uset_settings_repo.dart';
 
 class SplashBindings extends Bindings {
   @override
