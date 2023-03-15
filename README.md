@@ -1,16 +1,25 @@
-# my_shopping_cart
+# My Shopping Cart
 
-A new Flutter project.
+An Animation, Style Focused shopping cart
 
-## Getting Started
+# MVP 1
 
-This project is a starting point for a Flutter application.
+- Home/Create/Detail cart page with basic functions and styling, no complex animations needed.
 
-A few resources to get you started if this is your first Flutter project:
+## TODO
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Feature
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Delete cart
+- Delete cart item
+- Re-skin Home page
+- Re-skin Detail page
+- Re-skin Create page
+- Add badge in Create page FAB
+- Listen to cart changes on home page
+- MORE ANIMATIONSSSSS
+
+### Bug
+
+- During edit a middle item, press back/continue shopping, item is not saved.
+- Cannot Continue shopping if in a middle of an edit

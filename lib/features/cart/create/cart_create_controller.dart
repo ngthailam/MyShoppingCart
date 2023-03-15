@@ -28,6 +28,10 @@ class CartCreateController extends GetxController {
   final RxBool showBeginShopping = RxBool(false);
 
   Future<Cart?> saveCart() async {
+    if (itemEdtCtrl.text.isNotEmpty) {
+      onSubmitCartItem(itemEdtCtrl.text);
+    }
+
     if (items.isNotEmpty) {
       return _cartRepo.create(
         title: titleEdtCtrl.text,
@@ -46,15 +50,26 @@ class CartCreateController extends GetxController {
   Future saveCartAndBeginShopping() async {
     final cart = await saveCart();
     if (cart != null) {
+      Get.back();
       Get.toNamed(AppRoutes.cartDetail, arguments: cart.id);
     } else {
       Get.back();
     }
   }
 
-  onSubmitCartItem(String text) {
-    items.add(text);
-    itemEdtCtrl.clear();
+  onSubmitCartItem(String text, {String? textId}) {
+    // Add new item
+    if (textId == null) {
+      items.add(text);
+      itemEdtCtrl.clear();
+    } else {
+      if (textId.isEmpty) {
+        items.remove(textId);
+      } else {
+        items[items.indexOf(textId)] = text;
+      }
+    }
+
     if (items.isEmpty == showBeginShopping.value) {
       showBeginShopping.value = items.isNotEmpty;
     }

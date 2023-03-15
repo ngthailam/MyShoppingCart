@@ -15,7 +15,8 @@ class CartDetailPage extends GetView<CartDetailController> {
           if (cart == null) return const SizedBox.shrink();
           final itemCount =
               cart.items.isNotEmpty ? '(${cart.items.length})' : '';
-          return Text('${cart.title} ${itemCount}');
+          final title = cart.title.isNotEmpty ? cart.title : 'Cart';
+          return Text('$title $itemCount');
         }),
       ),
       backgroundColor: Colors.white,

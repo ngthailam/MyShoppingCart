@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:my_shopping_cart/data/cart/entity/cart.dart';
 
 class CartRepo {
@@ -19,6 +20,10 @@ class CartRepo {
   Future delete(int cartId) async {
     final box = await cartBox();
     return box.delete(cartId);
+  }
+
+  Stream<BoxEvent> listenAll() {
+    return Hive.box<Cart>(Cart.boxName).watch();
   }
 
   Future<List<Cart>> getAll() async {

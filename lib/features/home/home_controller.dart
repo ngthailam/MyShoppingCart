@@ -1,5 +1,6 @@
 import 'package:get/instance_manager.dart';
 import 'package:get/state_manager.dart';
+import 'package:hive/hive.dart';
 import 'package:my_shopping_cart/data/cart/cart_repo.dart';
 import 'package:my_shopping_cart/data/cart/entity/cart.dart';
 
@@ -19,10 +20,17 @@ class HomeController extends GetxController {
   final RxString greeting = RxString('');
 
   @override
-  void onReady() {
+  void onReady() async {
     super.onReady();
     fetchGreetings();
-    fetchAllCarts();
+    await fetchAllCarts();
+    _cartRepo.listenAll().listen((BoxEvent event) {
+      if (carts.where((p0) => event.key == p0.id).isNotEmpty) {
+        carts.removeWhere((element) => element.id == event.key);
+      } else {
+        carts.add(event.value as Cart);
+      }
+    });
   }
 
   void fetchGreetings() {

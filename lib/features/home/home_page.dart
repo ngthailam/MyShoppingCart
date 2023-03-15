@@ -33,7 +33,7 @@ class HomePage extends GetView<HomeController> {
         Obx(() {
           return Text('Good ${controller.greeting.value}');
         }),
-        Text('Welcome'),
+        const Text('Welcome'),
       ],
     );
   }

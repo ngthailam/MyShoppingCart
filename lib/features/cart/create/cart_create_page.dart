@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:my_shopping_cart/features/cart/create/cart_create_controller.dart';
+import 'package:my_shopping_cart/features/cart/create/widgets/editable_cart_item.dart';
 
 class CartCreatePage extends GetView<CartCreateController> {
   const CartCreatePage({Key? key}) : super(key: key);
@@ -28,8 +29,7 @@ class CartCreatePage extends GetView<CartCreateController> {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                child: PaddedColumn(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
                   children: [
                     _title(),
                     const SizedBox(height: 8),
@@ -50,9 +50,12 @@ class CartCreatePage extends GetView<CartCreateController> {
   }
 
   Widget _title() {
-    return TextField(
-      controller: controller.titleEdtCtrl,
-      decoration: const InputDecoration.collapsed(hintText: 'Title'),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: TextField(
+        controller: controller.titleEdtCtrl,
+        decoration: const InputDecoration.collapsed(hintText: 'Title'),
+      ),
     );
   }
 
@@ -64,18 +67,23 @@ class CartCreatePage extends GetView<CartCreateController> {
 
       return ListView(
         shrinkWrap: true,
-        children: cartItems.map((element) => _item(element)).toList(),
+        children: cartItems
+            .map(
+              (element) => EditableCartItem(
+                item: element,
+                onSubmitted: (String newText) {
+                  controller.onSubmitCartItem(newText, textId: element);
+                },
+              ),
+            )
+            .toList(),
       );
     });
   }
 
-  Widget _item(String element) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8), child: Text(element));
-  }
-
   Widget _subtitle() {
-    return Row(
+    return PaddedRow(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       children: [
         Text(
           DateFormat('MMM dd, HH:mm').format(
@@ -88,11 +96,14 @@ class CartCreatePage extends GetView<CartCreateController> {
   }
 
   Widget _content() {
-    return TextField(
-      controller: controller.itemEdtCtrl,
-      onEditingComplete: () {}, // this prevents keyboard from closing
-      onSubmitted: (text) => controller.onSubmitCartItem(text),
-      decoration: const InputDecoration.collapsed(hintText: 'Shopping item'),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: TextField(
+        controller: controller.itemEdtCtrl,
+        onEditingComplete: () {}, // this prevents keyboard from closing
+        onSubmitted: (text) => controller.onSubmitCartItem(text),
+        decoration: const InputDecoration.collapsed(hintText: 'Shopping item'),
+      ),
     );
   }
 
@@ -104,7 +115,7 @@ class CartCreatePage extends GetView<CartCreateController> {
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: FloatingActionButton.extended(
             onPressed: () {
-              // TODO: save
+              controller.saveCartAndBeginShopping();
             },
             label: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
