@@ -1,11 +1,12 @@
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:my_shopping_cart/data/cart/entity/cart.dart';
+import 'package:my_shopping_cart/data/cart/entity/cart_item.dart';
 
 class CartRepo {
   Future<Cart> create({
     String? title,
-    required List<String> items,
+    required List<CartItem> items,
   }) async {
     final box = await cartBox();
     final cart = Cart(

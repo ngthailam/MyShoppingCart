@@ -5,6 +5,7 @@ import 'package:get/state_manager.dart';
 import 'package:my_shopping_cart/core/navigation/app_routes.dart';
 import 'package:my_shopping_cart/data/cart/cart_repo.dart';
 import 'package:my_shopping_cart/data/cart/entity/cart.dart';
+import 'package:my_shopping_cart/data/cart/entity/cart_item.dart';
 
 class CartCreateBindings extends Bindings {
   @override
@@ -24,18 +25,37 @@ class CartCreateController extends GetxController {
   final TextEditingController titleEdtCtrl = TextEditingController();
   final TextEditingController itemEdtCtrl = TextEditingController();
 
-  final RxList<String> items = RxList([]);
+  final FocusNode titleFocusNode = FocusNode();
+
+  final ScrollController scrollController = ScrollController();
+
+  final Map<int, CartItem> items = {};
+  final RxMap<int, int> displayItemBlocks = RxMap();
   final RxBool showBeginShopping = RxBool(false);
+  final RxInt itemCount = RxInt(0);
+
+  int currentFocusItemId = 0;
+
+  @override
+  void onInit() {
+    super.onInit();
+    items[0] = CartItem(id: 0, text: '');
+    displayItemBlocks[0] = 0;
+
+    itemCount.listen((int count) {
+      showBeginShopping.value = count != 0;
+    });
+  }
 
   Future<Cart?> saveCart() async {
     if (itemEdtCtrl.text.isNotEmpty) {
-      onSubmitCartItem(itemEdtCtrl.text);
+      // onSubmitCartItem(itemEdtCtrl.text);
     }
 
     if (items.isNotEmpty) {
       return _cartRepo.create(
-        title: titleEdtCtrl.text,
-        items: items,
+        title: titleEdtCtrl.text.isNotEmpty ? titleEdtCtrl.text : 'No Title',
+        items: items.values.toList(),
       );
     }
 
@@ -57,21 +77,63 @@ class CartCreateController extends GetxController {
     }
   }
 
-  onSubmitCartItem(String text, {String? textId}) {
-    // Add new item
-    if (textId == null) {
-      items.add(text);
-      itemEdtCtrl.clear();
-    } else {
-      if (textId.isEmpty) {
-        items.remove(textId);
-      } else {
-        items[items.indexOf(textId)] = text;
+  // onSubmitCartItem(String text, {int? itemId}) {
+  //   // Add new item
+  //   if (itemId == null) {
+  //     final generatedId = items.length;
+  //     items[generatedId] = CartItem(id: generatedId, text: text);
+  //     itemEdtCtrl.clear();
+  //   } else {
+  //     // Edit and already exist item
+  //   }
+
+  //   if (items.isEmpty == showBeginShopping.value) {
+  //     showBeginShopping.value = items.isNotEmpty;
+  //   }
+
+  //   itemCount.value = items.length;
+
+  //   Future.delayed(const Duration(milliseconds: 150), () {
+  //     scrollToBottom();
+  //   });
+  // }
+
+  void onItemSubmit({
+    required int itemId,
+  }) {
+    // If no item has bigger id -> this is the last item
+    final isLastItem = !items.keys.any((element) => element > itemId);
+    if (isLastItem) {
+      final newIndex = items.length;
+      items[newIndex] = CartItem(id: newIndex, text: '');
+      displayItemBlocks[newIndex] = newIndex;
+    }
+  }
+
+  void onItemTextChanged({
+    required int itemId,
+    required String text,
+  }) {
+    items[itemId] = items[itemId]!.copyWith(text: text);
+
+    itemCount.value =
+        items.values.where((element) => element.text.isNotEmpty).length;
+  }
+
+  void onItemFocus({required int itemId}) {
+    if (itemId != currentFocusItemId) {
+      if (items[itemId] != null && items[itemId]?.text.isEmpty == true) {
+        items.remove(itemId);
+        displayItemBlocks.remove(itemId);
       }
     }
 
-    if (items.isEmpty == showBeginShopping.value) {
-      showBeginShopping.value = items.isNotEmpty;
-    }
+    currentFocusItemId = itemId;
+  }
+
+  void scrollToBottom() {
+    scrollController.jumpTo(
+      scrollController.position.maxScrollExtent,
+    );
   }
 }

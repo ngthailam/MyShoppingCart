@@ -3,6 +3,7 @@ import 'package:get/route_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:my_shopping_cart/core/navigation/app_routes.dart';
 import 'package:my_shopping_cart/data/cart/entity/cart.dart';
+import 'package:my_shopping_cart/data/cart/entity/cart_item.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +14,9 @@ void main() async {
 
 initHive() async {
   await Hive.initFlutter();
-  Hive.registerAdapter(CartAdapter());
+  Hive
+    ..registerAdapter(CartAdapter())
+    ..registerAdapter(CartItemAdapter());
 }
 
 class MyApp extends StatelessWidget {

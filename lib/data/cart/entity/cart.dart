@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:my_shopping_cart/data/cart/entity/cart_item.dart';
 
 part 'cart.g.dart';
 
@@ -13,7 +14,7 @@ class Cart extends HiveObject {
   final String title;
 
   @HiveField(2)
-  final List<String> items;
+  final List<CartItem> items;
 
   Cart({
     required this.id,

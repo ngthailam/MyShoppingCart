@@ -16,10 +16,12 @@ An Animation, Style Focused shopping cart
 - Re-skin Detail page
 - Re-skin Create page
 - Add badge in Create page FAB
-- Listen to cart changes on home page
 - MORE ANIMATIONSSSSS
 
 ### Bug
 
-- During edit a middle item, press back/continue shopping, item is not saved.
-- Cannot Continue shopping if in a middle of an edit
+- Bug3
+    - All items filled
+    - Go to second item to change
+    - Press done button
+    + [Actual]: dismiss keyboard,  [Expected]: Create a new entry block

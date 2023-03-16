@@ -29,6 +29,7 @@ class CartCreatePage extends GetView<CartCreateController> {
           children: [
             Expanded(
               child: SingleChildScrollView(
+                controller: controller.scrollController,
                 child: Column(
                   children: [
                     _title(),
@@ -36,8 +37,6 @@ class CartCreatePage extends GetView<CartCreateController> {
                     _subtitle(),
                     const SizedBox(height: 16),
                     _items(),
-                    const SizedBox(height: 8),
-                    _content(),
                   ],
                 ),
               ),
@@ -54,6 +53,7 @@ class CartCreatePage extends GetView<CartCreateController> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: TextField(
         controller: controller.titleEdtCtrl,
+        focusNode: controller.titleFocusNode..requestFocus(),
         decoration: const InputDecoration.collapsed(hintText: 'Title'),
       ),
     );
@@ -61,18 +61,28 @@ class CartCreatePage extends GetView<CartCreateController> {
 
   Widget _items() {
     return Obx(() {
-      final cartItems = controller.items;
+      final entryBlocks = controller.displayItemBlocks;
 
-      if (cartItems.isEmpty) return const SizedBox.shrink();
+      if (entryBlocks.isEmpty) return const SizedBox.shrink();
 
       return ListView(
+        key: const Key('Item-List'),
         shrinkWrap: true,
-        children: cartItems
+        physics: const NeverScrollableScrollPhysics(),
+        children: entryBlocks.values
             .map(
               (element) => EditableCartItem(
-                item: element,
+                item: controller.items[element]!,
                 onSubmitted: (String newText) {
-                  controller.onSubmitCartItem(newText, textId: element);
+                  controller.onItemSubmit(itemId: element);
+                },
+                onChanged: (String text) {
+                  controller.onItemTextChanged(itemId: element, text: text);
+                },
+                onFocusChange: (bool hasFocus) {
+                  if (hasFocus) {
+                    controller.onItemFocus(itemId: element);
+                  }
                 },
               ),
             )
@@ -90,20 +100,10 @@ class CartCreatePage extends GetView<CartCreateController> {
             DateTime.fromMillisecondsSinceEpoch(controller.currentTime),
           ),
         ),
-        const Text(' | 0 items'),
+        Obx(() {
+          return Text(' | ${controller.itemCount} items');
+        }),
       ],
-    );
-  }
-
-  Widget _content() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: TextField(
-        controller: controller.itemEdtCtrl,
-        onEditingComplete: () {}, // this prevents keyboard from closing
-        onSubmitted: (text) => controller.onSubmitCartItem(text),
-        decoration: const InputDecoration.collapsed(hintText: 'Shopping item'),
-      ),
     );
   }
 

@@ -29,7 +29,7 @@ class CartDetailPage extends GetView<CartDetailController> {
         return ListView.builder(
           itemCount: cartItems.length,
           itemBuilder: (context, i) {
-            return Text(cartItems[i]);
+            return Text(cartItems[i].text);
           },
         );
       }),
