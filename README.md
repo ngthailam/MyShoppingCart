@@ -12,7 +12,6 @@ An Animation, Style Focused shopping cart
 
 - Delete cart
 - Delete cart item
-- Re-skin Home page: Scroll down: hide Make Shopping List button
 - Re-skin Detail page
 - Re-skin Create page
 - Add badge in Create page FAB
@@ -20,6 +19,7 @@ An Animation, Style Focused shopping cart
 
 - Create page: Add notice will be save on back (3 times)
 - Tick item on cart detail to finish shopping
+- Empty state for No cart Home Page
 
 ### Out of scope ( Future improvements )
 
@@ -27,8 +27,17 @@ An Animation, Style Focused shopping cart
 - Cart detail progress bar ?
 - Add animation to confirm finish button in detail page
 - GetX navigation breaks Hero tag
+- Add color to Carts in Home Page
+- HomePage animate Fab text when size is fully expanded / FAB hide only if scroll down to some degree
 
 ### Bug
+
+- Bug
+    - Toolbar changes color on too many items in create page
+
+- Bug2
+    - Fix when add new item in create page
+    - always close, open keyboard -> laggy + not cool
 
 - Bug3
     - All items filled

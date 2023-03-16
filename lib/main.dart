@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:my_shopping_cart/core/navigation/app_routes.dart';
 import 'package:my_shopping_cart/data/cart/entity/cart.dart';
 import 'package:my_shopping_cart/data/cart/entity/cart_item.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  initializeDateFormatting();
+
   await initHive();
 
   runApp(const MyApp());

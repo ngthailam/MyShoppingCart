@@ -18,6 +18,7 @@ class HomeController extends GetxController {
 
   final RxList<Cart> carts = RxList([]);
   final RxString greeting = RxString('');
+  final RxBool isFabVisible = RxBool(true);
 
   @override
   void onReady() async {
@@ -48,5 +49,11 @@ class HomeController extends GetxController {
 
   Future fetchAllCarts() async {
     carts.value = await _cartRepo.getAll();
+  }
+
+  void toggleFabVisibility(bool visible) {
+    if (visible != isFabVisible.value) {
+      isFabVisible.value = visible;
+    }
   }
 }

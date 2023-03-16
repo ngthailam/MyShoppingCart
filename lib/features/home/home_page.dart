@@ -1,14 +1,41 @@
 import 'package:flextras/flextras.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
 import 'package:my_shopping_cart/core/navigation/app_routes.dart';
 import 'package:my_shopping_cart/features/home/home_controller.dart';
+import 'package:my_shopping_cart/features/home/widgets/home_cart_item.dart';
 
-class HomePage extends GetView<HomeController> {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ScrollController scrollController = ScrollController();
+  final HomeController controller = Get.find<HomeController>();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (scrollController.position.extentBefore < 120) {
+        controller.toggleFabVisibility(true);
+        return;
+      }
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        controller.toggleFabVisibility(false);
+      } else {
+        controller.toggleFabVisibility(true);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +45,7 @@ class HomePage extends GetView<HomeController> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _welcomeText(),
-            _carts(),
+            _carts(scrollController),
           ],
         ),
       ),
@@ -45,7 +72,7 @@ class HomePage extends GetView<HomeController> {
     );
   }
 
-  Widget _carts() {
+  Widget _carts(ScrollController scrollController) {
     return Expanded(
       child: Obx(() {
         final carts = controller.carts;
@@ -57,40 +84,12 @@ class HomePage extends GetView<HomeController> {
             crossAxisCount: 2,
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
+            controller: scrollController,
+            physics: const BouncingScrollPhysics(),
             itemCount: carts.length,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             itemBuilder: (context, i) {
-              return Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.grey.shade300,
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      Get.toNamed(AppRoutes.cartDetail, arguments: carts[i].id);
-                    },
-                    borderRadius: BorderRadius.circular(16),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(carts[i].title),
-                          SizedBox(height: 16),
-                          Text(carts[i].title),
-                          Text(carts[i].title),
-                          SizedBox(height: 16),
-                          Text(carts[i].id),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
+              return HomeCartItem(cart: carts[i]);
             },
           ),
         );
@@ -99,20 +98,30 @@ class HomePage extends GetView<HomeController> {
   }
 
   Widget _cartCreateFab() {
-    return FloatingActionButton.extended(
-      heroTag: 'Fab',
-      onPressed: () {
-        Get.toNamed(AppRoutes.cartCreate);
-      },
-      label: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Icon(Icons.shopping_bag),
-          SizedBox(width: 8),
-          Text('Make Shopping list'),
-        ],
-      ),
-    );
+    return Obx(() {
+      final isVisible = controller.isFabVisible.value;
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        width: isVisible ? 200 : 0,
+        curve: Curves.easeOut,
+        child: FloatingActionButton.extended(
+          heroTag: 'Fab',
+          onPressed: () {
+            Get.toNamed(AppRoutes.cartCreate);
+          },
+          label: isVisible
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.shopping_bag),
+                    SizedBox(width: 8),
+                    Text('Make Shopping list'),
+                  ],
+                )
+              : const SizedBox.shrink(),
+        ),
+      );
+    });
   }
 }
