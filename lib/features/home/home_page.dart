@@ -49,10 +49,10 @@ class HomePage extends GetView<HomeController> {
           itemCount: carts.length,
           itemBuilder: (context, i) {
             return GestureDetector(
-              onTap: () {
-                Get.toNamed(AppRoutes.cartDetail, arguments: carts[i].id);
-              },
-              child: Text(carts[i].title));
+                onTap: () {
+                  Get.toNamed(AppRoutes.cartDetail, arguments: carts[i].id);
+                },
+                child: Text(carts[i].title));
           },
         );
       }),
@@ -61,6 +61,7 @@ class HomePage extends GetView<HomeController> {
 
   Widget _cartCreateFab() {
     return FloatingActionButton.extended(
+      heroTag: 'Fab',
       onPressed: () {
         Get.toNamed(AppRoutes.cartCreate);
       },

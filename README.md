@@ -18,6 +18,16 @@ An Animation, Style Focused shopping cart
 - Add badge in Create page FAB
 - MORE ANIMATIONSSSSS
 
+- Create page: Add notice will be save on back (3 times)
+- Tick item on cart detail to finish shopping
+
+### Out of scope ( Future improvements )
+
+- Edit item during cart detail
+- Cart detail progress bar ?
+- Add animation to confirm finish button in detail page
+- GetX navigation breaks Hero tag
+
 ### Bug
 
 - Bug3

@@ -18,7 +18,7 @@ class CartRepo {
     return cart;
   }
 
-  Future delete(int cartId) async {
+  Future delete(String cartId) async {
     final box = await cartBox();
     return box.delete(cartId);
   }
