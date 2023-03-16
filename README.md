@@ -12,7 +12,7 @@ An Animation, Style Focused shopping cart
 
 - Delete cart
 - Delete cart item
-- Re-skin Home page
+- Re-skin Home page: Scroll down: hide Make Shopping List button
 - Re-skin Detail page
 - Re-skin Create page
 - Add badge in Create page FAB

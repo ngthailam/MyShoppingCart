@@ -1,5 +1,6 @@
 import 'package:flextras/flextras.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/instance_manager.dart';
@@ -31,9 +32,15 @@ class HomePage extends GetView<HomeController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Obx(() {
-          return Text('Good ${controller.greeting.value}');
+          return Text(
+            'Good ${controller.greeting.value}',
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
+          );
         }),
-        const Text('Welcome'),
+        Text(
+          'Let\'s do some shopping',
+          style: TextStyle(color: Colors.grey.shade800),
+        ),
       ],
     );
   }
@@ -42,18 +49,50 @@ class HomePage extends GetView<HomeController> {
     return Expanded(
       child: Obx(() {
         final carts = controller.carts;
-
-        if (carts.isEmpty) return Container(); // TODO: add empty state
-
-        return ListView.builder(
-          itemCount: carts.length,
-          itemBuilder: (context, i) {
-            return GestureDetector(
-                onTap: () {
-                  Get.toNamed(AppRoutes.cartDetail, arguments: carts[i].id);
-                },
-                child: Text(carts[i].title));
-          },
+        // TODO: add empty state
+        if (carts.isEmpty) return Container();
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: MasonryGridView.count(
+            crossAxisCount: 2,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            itemCount: carts.length,
+            itemBuilder: (context, i) {
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.grey.shade300,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      Get.toNamed(AppRoutes.cartDetail, arguments: carts[i].id);
+                    },
+                    borderRadius: BorderRadius.circular(16),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(carts[i].title),
+                          SizedBox(height: 16),
+                          Text(carts[i].title),
+                          Text(carts[i].title),
+                          SizedBox(height: 16),
+                          Text(carts[i].id),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
         );
       }),
     );
